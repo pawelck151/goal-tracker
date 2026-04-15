@@ -33,13 +33,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: 'No tasks today, skipping email' })
   }
 
-  const token = await prisma.dailyToken.create({
-    data: {
-      userId: user.id,
-      date: today,
-      expiresAt: endOfDay(today),
-    },
+  let token = await prisma.dailyToken.findFirst({
+    where: { userId: user.id, date: { gte: startOfDay(today), lte: endOfDay(today) } },
   })
+  if (!token) {
+    token = await prisma.dailyToken.create({
+      data: {
+        userId: user.id,
+        date: today,
+        expiresAt: endOfDay(today),
+      },
+    })
+  }
 
   const tokenUrl = `${process.env.NEXT_PUBLIC_APP_URL}/token/${token.token}`
   const taskList = tasks
