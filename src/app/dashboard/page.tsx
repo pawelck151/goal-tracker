@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { logoutAction } from '@/actions/auth'
 import Link from 'next/link'
 
 function startOfDay(d: Date) {
@@ -78,6 +79,11 @@ export default async function DashboardPage() {
           <Link href="/settings" className="text-gray-500 text-sm hover:text-gray-700 self-center">
             Ustawienia
           </Link>
+          <form action={logoutAction}>
+            <button type="submit" className="text-gray-400 text-sm hover:text-gray-600 self-center">
+              Wyloguj
+            </button>
+          </form>
         </div>
       </div>
 

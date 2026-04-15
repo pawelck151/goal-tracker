@@ -82,7 +82,7 @@ export default async function TokenPage({
                 {task.title}
               </p>
               <div className="flex gap-2 mt-3">
-                <form action={updateTaskStatus.bind(null, task.id, 'DONE', dailyToken.userId)}>
+                <form action={updateTaskStatus.bind(null, task.id, 'DONE')}>
                   <button
                     type="submit"
                     className={`px-4 py-1.5 rounded-lg text-sm font-medium ${
@@ -95,7 +95,7 @@ export default async function TokenPage({
                   </button>
                 </form>
                 <form
-                  action={updateTaskStatus.bind(null, task.id, 'SKIPPED', dailyToken.userId)}
+                  action={updateTaskStatus.bind(null, task.id, 'SKIPPED')}
                 >
                   <button
                     type="submit"
