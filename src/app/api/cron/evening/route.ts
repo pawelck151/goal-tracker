@@ -55,16 +55,16 @@ export async function POST(req: Request) {
       : `Podsumowanie dnia — ${done}/${tasks.length} zadań`
 
   const html =
-    pending > 0 && tokenUrl
+    pending > 0
       ? `
         <h2>Wieczorne podsumowanie</h2>
         <p>Masz <strong>${pending}</strong> nieoznaczone zadania na dziś.</p>
-        <p>
+        ${tokenUrl ? `<p>
           <a href="${tokenUrl}"
              style="background:#2563eb;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;display:inline-block;margin-top:16px;">
             Oznacz zadania
           </a>
-        </p>
+        </p>` : ''}
       `
       : `
         <h2>Świetna robota!</h2>
