@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -12,4 +6,69 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String       @id @default(cuid())
+  email       String       @unique
+  morningTime String       @default("08:00")
+  eveningTime String       @default("20:00")
+  timezone    String       @default("Europe/Warsaw")
+  createdAt   DateTime     @default(now())
+  goals       Goal[]
+  dailyLogs   DailyLog[]
+  dailyTokens DailyToken[]
+}
+
+model Goal {
+  id             String   @id @default(cuid())
+  userId         String
+  title          String
+  category       String
+  description    String
+  startDate      DateTime
+  deadline       DateTime
+  isActive       Boolean  @default(true)
+  tasksGenerated Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks          Task[]
+}
+
+model Task {
+  id            String     @id @default(cuid())
+  goalId        String
+  title         String
+  scheduledDate DateTime
+  order         Int
+  goal          Goal       @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  dailyLogs     DailyLog[]
+}
+
+model DailyLog {
+  id     String         @id @default(cuid())
+  taskId String
+  userId String
+  date   DateTime
+  status DailyLogStatus @default(PENDING)
+  task   Task           @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, date])
+}
+
+enum DailyLogStatus {
+  DONE
+  SKIPPED
+  PENDING
+}
+
+model DailyToken {
+  id        String    @id @default(cuid())
+  userId    String
+  token     String    @unique @default(uuid())
+  date      DateTime
+  expiresAt DateTime
+  usedAt    DateTime?
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
