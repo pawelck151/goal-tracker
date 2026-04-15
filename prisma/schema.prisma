@@ -31,7 +31,7 @@ model Goal {
   isActive       Boolean  @default(true)
   tasksGenerated Boolean  @default(false)
   createdAt      DateTime @default(now())
-  user           User     @relation(fields: [userId], references: [id])
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   tasks          Task[]
 }
 
@@ -41,7 +41,7 @@ model Task {
   title         String
   scheduledDate DateTime
   order         Int
-  goal          Goal       @relation(fields: [goalId], references: [id])
+  goal          Goal       @relation(fields: [goalId], references: [id], onDelete: Cascade)
   dailyLogs     DailyLog[]
 }
 
@@ -51,8 +51,8 @@ model DailyLog {
   userId String
   date   DateTime
   status DailyLogStatus @default(PENDING)
-  task   Task           @relation(fields: [taskId], references: [id])
-  user   User           @relation(fields: [userId], references: [id])
+  task   Task           @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([taskId, date])
 }
@@ -70,5 +70,5 @@ model DailyToken {
   date      DateTime
   expiresAt DateTime
   usedAt    DateTime?
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
