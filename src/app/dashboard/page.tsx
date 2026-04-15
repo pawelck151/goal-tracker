@@ -117,7 +117,7 @@ export default async function DashboardPage() {
           </div>
         )}
         {goals.map((goal) => {
-          const total = goal._count.tasks
+          const total = goal.tasks.length
           const done = goal.tasks.filter(
             (t) => t.dailyLogs[0]?.status === 'DONE'
           ).length
