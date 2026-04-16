@@ -1,0 +1,106 @@
+'use client'
+
+import { useActionState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { createGoal } from '@/actions/goals'
+
+const CATEGORIES = [
+  { value: 'work', label: 'Praca' },
+  { value: 'health', label: 'Zdrowie' },
+  { value: 'learning', label: 'Nauka' },
+  { value: 'hobby', label: 'Hobby' },
+  { value: 'finance', label: 'Finanse' },
+]
+
+const inputClass =
+  'w-full bg-white border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-600'
+
+export default function NewGoalPage() {
+  const router = useRouter()
+  const [state, formAction, pending] = useActionState(createGoal, null)
+
+  useEffect(() => {
+    if (state?.goalId) {
+      fetch(`/api/goals/${state.goalId}/generate-tasks`, { method: 'POST' })
+      router.push('/dashboard')
+    }
+  }, [state?.goalId, router])
+
+  return (
+    <div>
+      <h1 className="text-2xl font-semibold tracking-tight text-stone-900 mb-8">
+        Nowy cel
+      </h1>
+
+      <form
+        action={formAction}
+        className="bg-stone-50 border border-stone-200 rounded-2xl p-6 flex flex-col gap-5"
+      >
+        <div>
+          <label className="block text-sm font-medium text-stone-700 mb-1">
+            Nazwa celu
+          </label>
+          <input
+            type="text"
+            name="title"
+            required
+            placeholder="np. Nauczyć się TypeScript"
+            className={inputClass}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-stone-700 mb-1">
+            Kategoria
+          </label>
+          <select name="category" required className={inputClass}>
+            {CATEGORIES.map((c) => (
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-stone-700 mb-1">
+            Opis{' '}
+            <span className="text-stone-400 font-normal">
+              (dla AI — im więcej szczegółów, tym lepsze zadania)
+            </span>
+          </label>
+          <textarea
+            name="description"
+            required
+            rows={4}
+            placeholder="Opisz cel szczegółowo: co chcesz osiągnąć, jaki masz poziom, jakie masz zasoby..."
+            className={`${inputClass} resize-none`}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              Data startu
+            </label>
+            <input type="date" name="startDate" required className={inputClass} />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-1">
+              Deadline
+            </label>
+            <input type="date" name="deadline" required className={inputClass} />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={pending}
+          className="bg-amber-800 hover:bg-amber-900 text-white rounded-xl px-5 py-2.5 text-sm font-medium disabled:opacity-50 transition-colors mt-1"
+        >
+          {pending ? 'Tworzenie...' : 'Utwórz cel'}
+        </button>
+      </form>
+    </div>
+  )
+}
