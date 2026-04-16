@@ -7,16 +7,19 @@ export default function LoginPage() {
   const [state, formAction, pending] = useActionState(loginAction, null)
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded-xl shadow-sm w-full max-w-sm">
-        <h1 className="text-2xl font-bold mb-6 text-center">Goal Tracker</h1>
+    <div className="min-h-screen bg-stone-100 flex items-center justify-center">
+      <div className="bg-stone-50 border border-stone-200 rounded-2xl p-8 w-full max-w-sm shadow-sm">
+        <h1 className="text-2xl font-semibold tracking-tight text-stone-900 mb-1 text-center">
+          Goal Tracker
+        </h1>
+        <p className="text-sm text-stone-400 text-center mb-6">Wprowadź PIN aby kontynuować</p>
         <form action={formAction} className="flex flex-col gap-4">
           <input
             type="password"
             name="pin"
-            placeholder="Wprowadź PIN"
+            placeholder="••••••"
             autoFocus
-            className="border rounded-lg px-4 py-3 text-center text-xl tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="bg-white border border-stone-200 rounded-xl px-4 py-3 text-center text-xl tracking-widest focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-600"
           />
           {state?.error && (
             <p className="text-red-500 text-sm text-center">{state.error}</p>
@@ -24,7 +27,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={pending}
-            className="bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
+            className="bg-amber-800 hover:bg-amber-900 text-white py-2.5 rounded-xl text-sm font-medium disabled:opacity-50 transition-colors"
           >
             {pending ? 'Logowanie...' : 'Zaloguj'}
           </button>
