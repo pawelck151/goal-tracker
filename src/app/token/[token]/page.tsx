@@ -70,7 +70,7 @@ export default async function TokenPage({
                 key={task.id}
                 className={`bg-stone-50 border border-stone-200 rounded-2xl p-5 border-l-4 ${
                   status === 'DONE'
-                    ? 'border-l-green-500'
+                    ? 'border-l-green-400'
                     : status === 'SKIPPED'
                     ? 'border-l-stone-300'
                     : 'border-l-amber-500'
@@ -81,7 +81,7 @@ export default async function TokenPage({
                 </div>
                 <p
                   className={`text-sm font-medium mb-3 ${
-                    status === 'DONE' ? 'line-through text-stone-400' : 'text-stone-900'
+                    status === 'DONE' ? 'line-through text-stone-400' : 'text-stone-700'
                   }`}
                 >
                   {task.title}
