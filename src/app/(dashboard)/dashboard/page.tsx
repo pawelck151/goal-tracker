@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma'
-import { logoutAction } from '@/actions/auth'
 import Link from 'next/link'
 
 function startOfDay(d: Date) {
@@ -32,11 +31,13 @@ async function getStreak(userId: string): Promise<boolean[]> {
   )
 }
 
+const DAY_LABELS = ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb', 'Nd']
+
 export default async function DashboardPage() {
   const user = await prisma.user.findFirst()
   if (!user) {
     return (
-      <p className="p-8 text-center text-gray-500">
+      <p className="p-8 text-center text-stone-500">
         Brak użytkownika. Uruchom: <code>npx prisma db seed</code>
       </p>
     )
@@ -65,48 +66,50 @@ export default async function DashboardPage() {
   const todayTasks = goals.flatMap((g) => g.tasks)
   const doneTasks = todayTasks.filter((t) => t.dailyLogs[0]?.status === 'DONE')
 
+  const streakDayLabels = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(today)
+    d.setDate(d.getDate() - (6 - i))
+    return DAY_LABELS[d.getDay() === 0 ? 6 : d.getDay() - 1]
+  })
+
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <div className="flex gap-3">
-          <Link
-            href="/goals/new"
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700"
-          >
-            + Nowy cel
-          </Link>
-          <Link href="/settings" className="text-gray-500 text-sm hover:text-gray-700 self-center">
-            Ustawienia
-          </Link>
-          <form action={logoutAction}>
-            <button type="submit" className="text-gray-400 text-sm hover:text-gray-600 self-center">
-              Wyloguj
-            </button>
-          </form>
-        </div>
+        <h1 className="text-2xl font-semibold tracking-tight text-stone-900">
+          Dashboard
+        </h1>
       </div>
 
       {/* Metrics */}
       <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-white rounded-xl p-4 shadow-sm text-center">
-          <div className="text-3xl font-bold text-blue-600">{goals.length}</div>
-          <div className="text-sm text-gray-500 mt-1">Aktywne cele</div>
+        <div className="bg-stone-50 border border-stone-200 rounded-2xl p-5 text-center">
+          <div className="text-3xl font-bold text-stone-900">{goals.length}</div>
+          <div className="text-xs font-medium uppercase tracking-wider text-stone-400 mt-1">
+            Aktywne cele
+          </div>
         </div>
-        <div className="bg-white rounded-xl p-4 shadow-sm text-center">
-          <div className="text-3xl font-bold text-green-600">
+        <div className="bg-stone-50 border border-stone-200 rounded-2xl p-5 text-center">
+          <div className="text-3xl font-bold text-stone-900">
             {doneTasks.length}/{todayTasks.length}
           </div>
-          <div className="text-sm text-gray-500 mt-1">Dziś ukończone</div>
+          <div className="text-xs font-medium uppercase tracking-wider text-stone-400 mt-1">
+            Dziś ukończone
+          </div>
         </div>
-        <div className="bg-white rounded-xl p-4 shadow-sm">
-          <div className="text-sm text-gray-500 mb-2">Streak (7 dni)</div>
-          <div className="flex gap-1">
+        <div className="bg-stone-50 border border-stone-200 rounded-2xl p-5">
+          <div className="text-xs font-medium uppercase tracking-wider text-stone-400 mb-3">
+            Streak (7 dni)
+          </div>
+          <div className="flex gap-1.5">
             {streak.map((active, i) => (
-              <div
-                key={i}
-                className={`h-5 w-5 rounded-sm ${active ? 'bg-green-500' : 'bg-gray-200'}`}
-              />
+              <div key={i} className="flex flex-col items-center gap-1">
+                <div
+                  className={`w-6 h-6 rounded-full ${
+                    active ? 'bg-amber-500' : 'bg-stone-200'
+                  }`}
+                />
+                <span className="text-xs text-stone-400">{streakDayLabels[i]}</span>
+              </div>
             ))}
           </div>
         </div>
@@ -115,9 +118,9 @@ export default async function DashboardPage() {
       {/* Goal cards */}
       <div className="flex flex-col gap-4">
         {goals.length === 0 && (
-          <div className="text-center py-12 text-gray-400">
+          <div className="text-center py-12 text-stone-400">
             Brak celów.{' '}
-            <Link href="/goals/new" className="text-blue-600 hover:underline">
+            <Link href="/goals/new" className="text-amber-800 hover:underline">
               Dodaj pierwszy cel
             </Link>
           </div>
@@ -130,51 +133,62 @@ export default async function DashboardPage() {
           const progress = total > 0 ? Math.round((done / total) * 100) : 0
 
           return (
-            <div key={goal.id} className="bg-white rounded-xl p-5 shadow-sm">
-              <div className="flex items-start justify-between mb-2">
+            <div
+              key={goal.id}
+              className="bg-stone-50 border border-stone-200 rounded-2xl p-6 border-l-4 border-l-amber-500"
+            >
+              <div className="flex items-start justify-between mb-3">
                 <div>
-                  <span className="text-xs text-gray-400 uppercase tracking-wide">
+                  <span className="text-xs font-medium uppercase tracking-wider text-stone-400">
                     {goal.category}
                   </span>
-                  <h2 className="font-semibold text-lg">{goal.title}</h2>
+                  <h2 className="text-lg font-semibold text-stone-900 mt-0.5">
+                    {goal.title}
+                  </h2>
                 </div>
-                <span className="text-sm text-gray-400">
+                <span className="text-sm text-stone-400 mt-0.5">
                   do {new Date(goal.deadline).toLocaleDateString('pl-PL')}
                 </span>
               </div>
 
-              <div className="w-full bg-gray-100 rounded-full h-2 mb-3">
+              <div className="w-full bg-stone-200 rounded-full h-1.5 mb-1">
                 <div
-                  className="bg-blue-500 h-2 rounded-full transition-all"
+                  className="bg-amber-500 h-1.5 rounded-full transition-all"
                   style={{ width: `${progress}%` }}
                 />
               </div>
+              <p className="text-xs text-stone-400 mb-3">{progress}% ukończone</p>
 
               {!goal.tasksGenerated ? (
-                <p className="text-sm text-gray-400 italic">Generowanie zadań...</p>
+                <p className="text-sm text-stone-400 italic">Generowanie zadań...</p>
               ) : goal.tasks.length === 0 ? (
-                <p className="text-sm text-gray-400">Brak zadań na dziś</p>
+                <p className="text-sm text-stone-400">Brak zadań na dziś</p>
               ) : (
-                <ul className="flex flex-col gap-1">
+                <ul className="flex flex-col gap-1.5">
                   {goal.tasks.map((task) => {
                     const status = task.dailyLogs[0]?.status
                     return (
-                      <li
-                        key={task.id}
-                        className={`text-sm flex items-center gap-2 ${
-                          status === 'DONE' ? 'line-through text-gray-400' : ''
-                        }`}
-                      >
+                      <li key={task.id} className="flex items-center gap-2.5">
                         <span
                           className={`w-2 h-2 rounded-full flex-shrink-0 ${
                             status === 'DONE'
-                              ? 'bg-green-400'
+                              ? 'bg-green-500'
                               : status === 'SKIPPED'
-                              ? 'bg-gray-300'
-                              : 'bg-blue-400'
+                              ? 'bg-stone-300'
+                              : 'bg-amber-500'
                           }`}
                         />
-                        {task.title}
+                        <span
+                          className={`text-sm ${
+                            status === 'DONE'
+                              ? 'line-through text-stone-400'
+                              : status === 'SKIPPED'
+                              ? 'text-stone-400'
+                              : 'text-stone-700'
+                          }`}
+                        >
+                          {task.title}
+                        </span>
                       </li>
                     )
                   })}
