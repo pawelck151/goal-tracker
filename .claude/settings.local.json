@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(npm list *)",
+      "Bash(ls -la tsconfig.json next.config.*)",
+      "Bash(npx prisma *)",
+      "Bash(DATABASE_URL=\"postgresql://user:password@localhost:5432/goal_tracker\" npx prisma generate)",
+      "Bash(DATABASE_URL=\"postgresql://user:password@localhost:5432/goal_tracker\" npx prisma migrate dev --name init)",
+      "Bash(DATABASE_URL=\"postgresql://user:password@localhost:5432/goal_tracker\" npx prisma migrate diff --from-empty --to-schema-datasource prisma/schema.prisma --script)",
+      "Read(//tmp/**)",
+      "Bash(DATABASE_URL=\"postgresql://user:password@localhost:5432/goal_tracker\" SHADOW_DATABASE_URL=\"postgresql://user:password@localhost:5432/goal_tracker_shadow\" npx prisma migrate dev --name init --skip-seed)",
+      "Bash(git -C \"/c/Users/wojta/source/repos/GoalTracker/goal-tracker/.worktrees/goal-tracker-impl\" log --oneline -10)",
+      "Bash(DATABASE_URL=\"postgresql://dummy:dummy@localhost/dummy\" npx prisma generate)",
+      "Bash(npx tsc *)",
+      "Bash(npm test *)",
+      "Bash(tee test-output.log)",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(npx tsx *)"
+    ]
+  }
+}
