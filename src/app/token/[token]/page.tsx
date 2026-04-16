@@ -37,7 +37,7 @@ export default async function TokenPage({
       goal: { userId: dailyToken.userId, isActive: true },
     },
     include: {
-      dailyLogs: { where: { date: { gte: startOfDay(today) } } },
+      dailyLogs: { where: { date: { gte: startOfDay(today), lte: endOfDay(today) } } },
       goal: { select: { title: true, category: true } },
     },
     orderBy: { order: 'asc' },
