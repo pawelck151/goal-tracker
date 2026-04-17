@@ -9,15 +9,16 @@ datasource db {
 }
 
 model User {
-  id          String       @id @default(cuid())
-  email       String       @unique
-  morningTime String       @default("08:00")
-  eveningTime String       @default("20:00")
-  timezone    String       @default("Europe/Warsaw")
-  createdAt   DateTime     @default(now())
-  goals       Goal[]
-  dailyLogs   DailyLog[]
-  dailyTokens DailyToken[]
+  id           String       @id @default(cuid())
+  email        String       @unique
+  passwordHash String?
+  morningTime  String       @default("08:00")
+  eveningTime  String       @default("20:00")
+  timezone     String       @default("Europe/Warsaw")
+  createdAt    DateTime     @default(now())
+  goals        Goal[]
+  dailyLogs    DailyLog[]
+  dailyTokens  DailyToken[]
 }
 
 model Goal {

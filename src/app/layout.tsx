@@ -9,10 +9,15 @@ export const metadata: Metadata = {
   description: 'Personal goal tracking app',
 }
 
+const themeScript = `(function(){try{var t=localStorage.getItem('theme');var d=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark');}catch(e){}})();`
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pl" className={geist.className}>
-      <body className="bg-stone-100 min-h-screen">{children}</body>
+    <html lang="pl" className={geist.className} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className="bg-stone-100 dark:bg-stone-950 min-h-screen">{children}</body>
     </html>
   )
 }

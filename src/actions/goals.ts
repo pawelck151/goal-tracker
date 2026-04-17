@@ -2,11 +2,10 @@
 
 import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
+import { requireUser } from '@/lib/auth'
 
 async function getUser() {
-  const user = await prisma.user.findFirst()
-  if (!user) throw new Error('No user found. Run: npx prisma db seed')
-  return user
+  return requireUser()
 }
 
 export async function createGoal(

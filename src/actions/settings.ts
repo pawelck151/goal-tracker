@@ -2,9 +2,10 @@
 
 import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
+import { getCurrentUser } from '@/lib/auth'
 
 export async function updateSettings(formData: FormData): Promise<void> {
-  const user = await prisma.user.findFirst()
+  const user = await getCurrentUser()
   if (!user) return
 
   await prisma.user.update({

@@ -13,7 +13,7 @@ const CATEGORIES = [
 ]
 
 const inputClass =
-  'w-full bg-white border border-stone-200 rounded-xl px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-600'
+  'w-full bg-white dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl px-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-600'
 
 export default function NewGoalPage() {
   const router = useRouter()
@@ -28,16 +28,16 @@ export default function NewGoalPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight text-stone-900 mb-8">
+      <h1 className="text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-100 mb-8">
         Nowy cel
       </h1>
 
       <form
         action={formAction}
-        className="bg-stone-50 border border-stone-200 rounded-2xl p-6 flex flex-col gap-5"
+        className="bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 flex flex-col gap-5"
       >
         <div>
-          <label className="block text-sm font-medium text-stone-700 mb-1">
+          <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
             Nazwa celu
           </label>
           <input
@@ -50,7 +50,7 @@ export default function NewGoalPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-stone-700 mb-1">
+          <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
             Kategoria
           </label>
           <select name="category" required className={inputClass}>
@@ -63,9 +63,9 @@ export default function NewGoalPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-stone-700 mb-1">
+          <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
             Opis{' '}
-            <span className="text-stone-400 font-normal">
+            <span className="text-stone-400 dark:text-stone-500 font-normal">
               (dla AI — im więcej szczegółów, tym lepsze zadania)
             </span>
           </label>
@@ -80,13 +80,13 @@ export default function NewGoalPage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">
+            <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
               Data startu
             </label>
             <input type="date" name="startDate" required className={inputClass} />
           </div>
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">
+            <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
               Deadline
             </label>
             <input type="date" name="deadline" required className={inputClass} />
@@ -96,7 +96,7 @@ export default function NewGoalPage() {
         <button
           type="submit"
           disabled={pending}
-          className="bg-amber-800 hover:bg-amber-900 text-white rounded-xl px-5 py-2.5 text-sm font-medium disabled:opacity-50 transition-colors mt-1"
+          className="bg-amber-800 hover:bg-amber-900 dark:bg-amber-700 dark:hover:bg-amber-600 text-white rounded-xl px-5 py-2.5 text-sm font-medium disabled:opacity-50 transition-colors mt-1"
         >
           {pending ? 'Tworzenie...' : 'Utwórz cel'}
         </button>

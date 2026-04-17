@@ -1,6 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk'
 
-const client = new Anthropic()
+function getClient() {
+  return new Anthropic()
+}
 
 export interface TaskItem {
   date: string
@@ -28,7 +30,7 @@ Return a JSON array only — no markdown, no explanation:
 [{ "date": "YYYY-MM-DD", "title": "...", "order": 1 }, ...]
 Only include dates between ${fmt(startDate)} and ${fmt(deadline)} inclusive.`
 
-  const message = await client.messages.create({
+  const message = await getClient().messages.create({
     model: 'claude-sonnet-4-20250514',
     max_tokens: 4096,
     messages: [{ role: 'user', content: prompt }],

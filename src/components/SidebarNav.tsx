@@ -22,8 +22,8 @@ export default function SidebarNav() {
             href={item.href}
             className={`flex items-center gap-3 px-3 py-2 mx-2 rounded-lg text-sm transition-colors ${
               isActive
-                ? 'bg-amber-50 text-amber-800 font-medium'
-                : 'text-stone-500 hover:bg-stone-100 hover:text-stone-900'
+                ? 'bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 font-medium'
+                : 'text-stone-500 hover:bg-stone-100 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-100'
             }`}
           >
             <span className="text-base leading-none">{item.icon}</span>

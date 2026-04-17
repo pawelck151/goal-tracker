@@ -4,25 +4,32 @@ vi.mock('next/headers', () => ({
   cookies: vi.fn().mockResolvedValue({
     set: vi.fn(),
     delete: vi.fn(),
+    get: vi.fn(),
   }),
 }))
 
-import { validatePin } from './auth'
+vi.mock('@/lib/prisma', () => ({
+  prisma: { user: { findUnique: vi.fn() } },
+}))
 
-describe('validatePin', () => {
+import { hashPassword, verifyPassword } from './auth'
+
+describe('password hashing', () => {
   beforeEach(() => {
-    process.env.PIN_PASSWORD = 'test-pin-123'
+    process.env.AUTH_SECRET = 'test-secret'
   })
 
-  it('returns true for the correct PIN', () => {
-    expect(validatePin('test-pin-123')).toBe(true)
+  it('hashes and verifies a correct password', () => {
+    const hash = hashPassword('hunter2-long')
+    expect(verifyPassword('hunter2-long', hash)).toBe(true)
   })
 
-  it('returns false for a wrong PIN', () => {
-    expect(validatePin('wrong')).toBe(false)
+  it('rejects a wrong password', () => {
+    const hash = hashPassword('hunter2-long')
+    expect(verifyPassword('wrong-pass', hash)).toBe(false)
   })
 
-  it('returns false for an empty string', () => {
-    expect(validatePin('')).toBe(false)
+  it('returns false for malformed hash', () => {
+    expect(verifyPassword('any', 'not-a-valid-hash')).toBe(false)
   })
 })
