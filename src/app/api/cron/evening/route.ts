@@ -2,8 +2,10 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { Resend } from 'resend'
 
-function getResend() {
-  return new Resend(process.env.RESEND_API_KEY)
+function getResend(): Resend | null {
+  const key = process.env.RESEND_API_KEY
+  if (!key) return null
+  return new Resend(key)
 }
 
 function startOfDay(d: Date) {
@@ -27,6 +29,7 @@ async function handle(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const resend = getResend()
   const users = await prisma.user.findMany()
   const today = new Date()
   const results: { userId: string; sent: boolean }[] = []
@@ -84,14 +87,16 @@ async function handle(req: Request) {
           <p>Dziś: <strong>${done}</strong> wykonanych, <strong>${skipped}</strong> pominiętych z ${tasks.length} zadań.</p>
         `
 
-    await getResend().emails.send({
-      from: 'Goal Tracker <onboarding@resend.dev>',
-      to: user.email,
-      subject,
-      html,
-    })
+    if (resend) {
+      await resend.emails.send({
+        from: 'Goal Tracker <onboarding@resend.dev>',
+        to: user.email,
+        subject,
+        html,
+      })
+    }
 
-    results.push({ userId: user.id, sent: true })
+    results.push({ userId: user.id, sent: Boolean(resend) })
   }
 
   return NextResponse.json({ results })

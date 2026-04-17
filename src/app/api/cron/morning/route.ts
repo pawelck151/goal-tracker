@@ -2,8 +2,10 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { Resend } from 'resend'
 
-function getResend() {
-  return new Resend(process.env.RESEND_API_KEY)
+function getResend(): Resend | null {
+  const key = process.env.RESEND_API_KEY
+  if (!key) return null
+  return new Resend(key)
 }
 
 function startOfDay(d: Date) {
@@ -27,6 +29,7 @@ async function handle(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const resend = getResend()
   const users = await prisma.user.findMany()
   const today = new Date()
   const results: { userId: string; sent: boolean; taskCount: number }[] = []
@@ -60,23 +63,25 @@ async function handle(req: Request) {
       .map((t) => `<li><strong>${t.goal.title}:</strong> ${t.title}</li>`)
       .join('')
 
-    await getResend().emails.send({
-      from: 'Goal Tracker <onboarding@resend.dev>',
-      to: user.email,
-      subject: `Twoje zadania na ${today.toLocaleDateString('pl-PL')}`,
-      html: `
-        <h2>Dzień dobry! Oto Twoje zadania na dziś:</h2>
-        <ul>${taskList}</ul>
-        <p>
-          <a href="${tokenUrl}"
-             style="background:#2563eb;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;display:inline-block;margin-top:16px;">
-            Oznacz zadania
-          </a>
-        </p>
-      `,
-    })
+    if (resend) {
+      await resend.emails.send({
+        from: 'Goal Tracker <onboarding@resend.dev>',
+        to: user.email,
+        subject: `Twoje zadania na ${today.toLocaleDateString('pl-PL')}`,
+        html: `
+          <h2>Dzień dobry! Oto Twoje zadania na dziś:</h2>
+          <ul>${taskList}</ul>
+          <p>
+            <a href="${tokenUrl}"
+               style="background:#2563eb;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;display:inline-block;margin-top:16px;">
+              Oznacz zadania
+            </a>
+          </p>
+        `,
+      })
+    }
 
-    results.push({ userId: user.id, sent: true, taskCount: tasks.length })
+    results.push({ userId: user.id, sent: Boolean(resend), taskCount: tasks.length })
   }
 
   return NextResponse.json({ results })
