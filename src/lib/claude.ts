@@ -42,7 +42,7 @@ Only include dates between ${fmt(startDate)} and ${fmt(deadline)} inclusive.`
 
   const t0 = Date.now()
   const message = await getClient().messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     max_tokens: 4096,
     messages: [{ role: 'user', content: prompt }],
   })
