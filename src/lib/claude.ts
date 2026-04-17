@@ -30,16 +30,35 @@ Return a JSON array only — no markdown, no explanation:
 [{ "date": "YYYY-MM-DD", "title": "...", "order": 1 }, ...]
 Only include dates between ${fmt(startDate)} and ${fmt(deadline)} inclusive.`
 
+  const hasKey = Boolean(process.env.ANTHROPIC_API_KEY)
+  console.log('[claude] generateTasks start', {
+    title,
+    category,
+    startDate: fmt(startDate),
+    deadline: fmt(deadline),
+    hasApiKey: hasKey,
+  })
+  if (!hasKey) throw new Error('ANTHROPIC_API_KEY is not set')
+
+  const t0 = Date.now()
   const message = await getClient().messages.create({
     model: 'claude-sonnet-4-20250514',
     max_tokens: 4096,
     messages: [{ role: 'user', content: prompt }],
   })
+  console.log('[claude] response received', {
+    ms: Date.now() - t0,
+    stop_reason: message.stop_reason,
+    input_tokens: message.usage?.input_tokens,
+    output_tokens: message.usage?.output_tokens,
+  })
 
   const block = message.content[0]
   if (block.type !== 'text') throw new Error('Unexpected Claude response type')
 
-  return parseTasksJson(block.text)
+  const tasks = parseTasksJson(block.text)
+  console.log('[claude] parsed tasks', { count: tasks.length })
+  return tasks
 }
 
 export function parseTasksJson(text: string): TaskItem[] {
