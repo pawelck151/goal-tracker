@@ -28,5 +28,5 @@ export async function updateTaskStatus(
   })
 
   revalidatePath('/dashboard')
-  revalidatePath('/token', 'page')
+  revalidatePath('/token/[token]', 'page')
 }

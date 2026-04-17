@@ -53,7 +53,7 @@ export default async function DashboardPage() {
           scheduledDate: { gte: startOfDay(today), lte: endOfDay(today) },
         },
         include: {
-          dailyLogs: { where: { date: { gte: startOfDay(today) } } },
+          dailyLogs: { where: { date: { gte: startOfDay(today), lte: endOfDay(today) } } },
         },
         orderBy: { order: 'asc' },
       },
