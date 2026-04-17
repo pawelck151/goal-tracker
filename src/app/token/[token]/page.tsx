@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import { updateTaskStatus } from '@/actions/tasks'
-import type { DailyLogStatus } from '@/generated/prisma/client'
+import type { DailyLogStatus } from '@prisma/client'
 
 function startOfDay(d: Date) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate())
