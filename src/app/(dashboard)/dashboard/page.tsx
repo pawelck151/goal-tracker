@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { getCurrentUser } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { TaskGenerationTrigger } from './TaskGenerationTrigger'
 
 function startOfDay(d: Date) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate())
@@ -68,8 +69,13 @@ export default async function DashboardPage() {
     return DAY_LABELS[d.getDay() === 0 ? 6 : d.getDay() - 1]
   })
 
+  const ungeneratedGoalIds = goals
+    .filter((g) => !g.tasksGenerated)
+    .map((g) => g.id)
+
   return (
     <div>
+      <TaskGenerationTrigger goalIds={ungeneratedGoalIds} />
       <div className="flex items-center justify-center mb-8">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-stone-900 dark:text-stone-100">
           Dashboard

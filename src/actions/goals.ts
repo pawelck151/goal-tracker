@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { requireUser } from '@/lib/auth'
 
@@ -8,10 +9,7 @@ async function getUser() {
   return requireUser()
 }
 
-export type CreateGoalState =
-  | { goalId: string }
-  | { error: string }
-  | null
+export type CreateGoalState = { error: string } | null
 
 export async function createGoal(
   _prev: CreateGoalState,
@@ -20,7 +18,7 @@ export async function createGoal(
   try {
     const user = await getUser()
 
-    const goal = await prisma.goal.create({
+    await prisma.goal.create({
       data: {
         userId: user.id,
         title: formData.get('title') as string,
@@ -32,12 +30,12 @@ export async function createGoal(
     })
 
     revalidatePath('/dashboard')
-    return { goalId: goal.id }
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
     console.error('[createGoal] failed', msg)
     return { error: msg }
   }
+  redirect('/dashboard')
 }
 
 export async function deleteGoal(goalId: string): Promise<void> {

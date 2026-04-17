@@ -1,7 +1,6 @@
 'use client'
 
 import { useActionState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { createGoal } from '@/actions/goals'
 
@@ -17,40 +16,13 @@ const inputClass =
   'w-full bg-white dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl px-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-600'
 
 export default function NewGoalPage() {
-  const router = useRouter()
   const [state, formAction, pending] = useActionState(createGoal, null)
 
   useEffect(() => {
-    if (!state) return
-    if ('error' in state) {
+    if (state && 'error' in state) {
       toast.error('Nie udało się utworzyć celu', { description: state.error })
-      return
     }
-    if (!('goalId' in state)) return
-    const goalId = state.goalId
-    toast.success('Cel utworzony', { description: 'Generuję zadania w tle...' })
-    router.push('/dashboard')
-    ;(async () => {
-      try {
-        const res = await fetch(`/api/goals/${goalId}/generate-tasks`, {
-          method: 'POST',
-        })
-        const body = await res.json().catch(() => null)
-        if (!res.ok) {
-          const detail =
-            (body && (body.detail || body.error)) || `HTTP ${res.status}`
-          toast.error('Nie udało się wygenerować zadań', { description: detail })
-        } else {
-          toast.success('Zadania wygenerowane', {
-            description: `${body?.count ?? '?'} zadań`,
-          })
-        }
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err)
-        toast.error('Błąd sieci przy generowaniu zadań', { description: msg })
-      }
-    })()
-  }, [state, router])
+  }, [state])
 
   return (
     <div>
