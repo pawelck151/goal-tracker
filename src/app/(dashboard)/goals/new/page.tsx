@@ -1,6 +1,7 @@
 'use client'
 
 import { useActionState, useEffect } from 'react'
+import Link from 'next/link'
 import { toast } from 'sonner'
 import { createGoal } from '@/actions/goals'
 
@@ -26,9 +27,30 @@ export default function NewGoalPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-100 mb-8">
-        Nowy cel
-      </h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-100">
+          Nowy cel
+        </h1>
+        <Link
+          href="/dashboard"
+          aria-label="Zamknij"
+          className="w-9 h-9 rounded-full flex items-center justify-center text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-800 hover:text-stone-900 dark:hover:text-stone-100 transition-colors"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-5 h-5"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </Link>
+      </div>
 
       <form
         action={formAction}
