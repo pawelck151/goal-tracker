@@ -37,7 +37,7 @@ export default async function TokenPage({
       goal: { userId: dailyToken.userId, isActive: true },
     },
     include: {
-      dailyLogs: { where: { date: { gte: startOfDay(today) } } },
+      dailyLogs: { where: { date: { gte: startOfDay(today), lte: endOfDay(today) } } },
       goal: { select: { title: true, category: true } },
     },
     orderBy: { order: 'asc' },
@@ -46,76 +46,80 @@ export default async function TokenPage({
   const done = tasks.filter((t) => t.dailyLogs[0]?.status === 'DONE').length
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-2">Zadania na dziś</h1>
-      <p className="text-gray-500 mb-6">
-        {done}/{tasks.length} wykonanych ·{' '}
-        {today.toLocaleDateString('pl-PL', {
-          weekday: 'long',
-          day: 'numeric',
-          month: 'long',
-        })}
-      </p>
+    <div className="min-h-screen bg-stone-100">
+      <div className="max-w-xl mx-auto px-4 py-8">
+        <div className="mb-6">
+          <h1 className="text-2xl font-semibold tracking-tight text-stone-900">
+            Zadania na dziś
+          </h1>
+          <p className="text-sm text-stone-400 mt-1">
+            {done}/{tasks.length} wykonanych ·{' '}
+            {today.toLocaleDateString('pl-PL', {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long',
+            })}
+          </p>
+        </div>
 
-      <div className="flex flex-col gap-3">
-        {tasks.map((task) => {
-          const status = task.dailyLogs[0]?.status as DailyLogStatus | undefined
-          return (
-            <div
-              key={task.id}
-              className={`bg-white rounded-xl p-4 shadow-sm border-l-4 ${
-                status === 'DONE'
-                  ? 'border-green-400'
-                  : status === 'SKIPPED'
-                  ? 'border-gray-300'
-                  : 'border-blue-400'
-              }`}
-            >
-              <div className="text-xs text-gray-400 uppercase tracking-wide mb-1">
-                {task.goal.category} · {task.goal.title}
-              </div>
-              <p
-                className={`font-medium ${
-                  status === 'DONE' ? 'line-through text-gray-400' : ''
+        <div className="flex flex-col gap-3">
+          {tasks.map((task) => {
+            const status = task.dailyLogs[0]?.status as DailyLogStatus | undefined
+            return (
+              <div
+                key={task.id}
+                className={`bg-stone-50 border border-stone-200 rounded-2xl p-5 border-l-4 ${
+                  status === 'DONE'
+                    ? 'border-l-green-400'
+                    : status === 'SKIPPED'
+                    ? 'border-l-stone-300'
+                    : 'border-l-amber-500'
                 }`}
               >
-                {task.title}
-              </p>
-              <div className="flex gap-2 mt-3">
-                <form action={updateTaskStatus.bind(null, task.id, 'DONE')}>
-                  <button
-                    type="submit"
-                    className={`px-4 py-1.5 rounded-lg text-sm font-medium ${
-                      status === 'DONE'
-                        ? 'bg-green-500 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-green-50 hover:text-green-700'
-                    }`}
-                  >
-                    ✓ Zrobione
-                  </button>
-                </form>
-                <form
-                  action={updateTaskStatus.bind(null, task.id, 'SKIPPED')}
+                <div className="text-xs font-medium uppercase tracking-wider text-stone-400 mb-1">
+                  {task.goal.category} · {task.goal.title}
+                </div>
+                <p
+                  className={`text-sm font-medium mb-3 ${
+                    status === 'DONE' ? 'line-through text-stone-400' : 'text-stone-700'
+                  }`}
                 >
-                  <button
-                    type="submit"
-                    className={`px-4 py-1.5 rounded-lg text-sm font-medium ${
-                      status === 'SKIPPED'
-                        ? 'bg-gray-400 text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    Pominięte
-                  </button>
-                </form>
+                  {task.title}
+                </p>
+                <div className="flex gap-2">
+                  <form action={updateTaskStatus.bind(null, task.id, 'DONE')}>
+                    <button
+                      type="submit"
+                      className={`px-4 py-1.5 rounded-xl text-sm font-medium transition-colors ${
+                        status === 'DONE'
+                          ? 'bg-green-600 text-white'
+                          : 'bg-stone-100 text-stone-700 hover:bg-green-50 hover:text-green-700'
+                      }`}
+                    >
+                      ✓ Zrobione
+                    </button>
+                  </form>
+                  <form action={updateTaskStatus.bind(null, task.id, 'SKIPPED')}>
+                    <button
+                      type="submit"
+                      className={`px-4 py-1.5 rounded-xl text-sm font-medium transition-colors ${
+                        status === 'SKIPPED'
+                          ? 'bg-stone-400 text-white'
+                          : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                      }`}
+                    >
+                      Pominięte
+                    </button>
+                  </form>
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
 
-        {tasks.length === 0 && (
-          <p className="text-center text-gray-400 py-12">Brak zadań na dziś.</p>
-        )}
+          {tasks.length === 0 && (
+            <p className="text-center text-stone-400 py-12">Brak zadań na dziś.</p>
+          )}
+        </div>
       </div>
     </div>
   )
