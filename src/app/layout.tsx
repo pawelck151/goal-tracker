@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
+import { Toaster } from 'sonner'
 import './globals.css'
 
 const geist = Geist({ subsets: ['latin'] })
@@ -17,7 +18,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="bg-stone-100 dark:bg-stone-950 min-h-screen">{children}</body>
+      <body className="bg-stone-100 dark:bg-stone-950 min-h-screen">
+        {children}
+        <Toaster richColors position="top-right" />
+      </body>
     </html>
   )
 }
