@@ -20,10 +20,25 @@ export default function NewGoalPage() {
   const [state, formAction, pending] = useActionState(createGoal, null)
 
   useEffect(() => {
-    if (state?.goalId) {
-      fetch(`/api/goals/${state.goalId}/generate-tasks`, { method: 'POST' })
-      router.push('/dashboard')
-    }
+    if (!state?.goalId) return
+    const goalId = state.goalId
+    ;(async () => {
+      try {
+        const res = await fetch(`/api/goals/${goalId}/generate-tasks`, {
+          method: 'POST',
+        })
+        const body = await res.json().catch(() => null)
+        if (!res.ok) {
+          console.error('[generate-tasks] client error', res.status, body)
+        } else {
+          console.log('[generate-tasks] client ok', body)
+        }
+      } catch (err) {
+        console.error('[generate-tasks] client fetch threw', err)
+      } finally {
+        router.push('/dashboard')
+      }
+    })()
   }, [state?.goalId, router])
 
   return (
