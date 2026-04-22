@@ -11,7 +11,7 @@ function getInitial(): Theme {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ iconOnly = false }: { iconOnly?: boolean }) {
   const [theme, setTheme] = useState<Theme>('light')
   const [mounted, setMounted] = useState(false)
 
@@ -29,12 +29,36 @@ export default function ThemeToggle() {
   }, [theme, mounted])
 
   const next = theme === 'dark' ? 'light' : 'dark'
+  const label = `Przełącz na tryb ${next === 'dark' ? 'ciemny' : 'jasny'}`
+
+  if (iconOnly) {
+    return (
+      <button
+        type="button"
+        onClick={() => setTheme(next)}
+        aria-label={label}
+        title={label}
+        className="w-9 h-9 rounded-lg flex items-center justify-center text-stone-500 hover:bg-stone-200 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-100 transition-colors"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          {mounted && theme === 'dark' ? (
+            <>
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+            </>
+          ) : (
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          )}
+        </svg>
+      </button>
+    )
+  }
 
   return (
     <button
       type="button"
       onClick={() => setTheme(next)}
-      aria-label={`Przełącz na tryb ${next === 'dark' ? 'ciemny' : 'jasny'}`}
+      aria-label={label}
       className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 transition-colors"
     >
       <svg
