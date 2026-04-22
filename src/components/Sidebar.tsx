@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { logoutAction } from '@/actions/auth'
 import SidebarNav from './SidebarNav'
 import ThemeToggle from './ThemeToggle'
+import { Logo } from './Logo'
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false)
@@ -18,9 +19,7 @@ export default function Sidebar() {
     <>
       {/* Mobile top bar */}
       <div className="md:hidden flex items-center justify-between px-4 py-3 bg-stone-50 dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800">
-        <span className="text-sm font-semibold text-stone-900 dark:text-stone-100 tracking-tight">
-          Goal Tracker
-        </span>
+        <Logo size="sm" href="/dashboard" />
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
@@ -75,9 +74,7 @@ export default function Sidebar() {
       {/* Desktop sidebar */}
       <aside className="hidden md:flex w-56 min-h-screen bg-stone-50 dark:bg-stone-900 border-r border-stone-200 dark:border-stone-800 flex-col flex-shrink-0">
         <div className="px-4 py-5 border-b border-stone-200 dark:border-stone-800">
-          <span className="text-sm font-semibold text-stone-900 dark:text-stone-100 tracking-tight">
-            Goal Tracker
-          </span>
+          <Logo size="sm" href="/dashboard" />
         </div>
 
         <SidebarNav />

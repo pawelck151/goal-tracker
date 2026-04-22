@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useActionState } from 'react'
 import { registerAction } from '@/actions/auth'
+import { Logo } from '@/components/Logo'
 
 const inputClass =
   'bg-white dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl px-4 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-600'
@@ -13,6 +14,9 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-stone-100 dark:bg-stone-950 flex items-center justify-center px-4">
       <div className="bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-8 w-full max-w-sm shadow-sm">
+        <div className="flex justify-center mb-3">
+          <Logo size="lg" wordmark={false} />
+        </div>
         <h1 className="text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-100 mb-1 text-center">
           Załóż konto
         </h1>
