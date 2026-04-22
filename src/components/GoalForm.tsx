@@ -151,7 +151,7 @@ export function GoalForm({
               type="date"
               name="startDate"
               required
-              defaultValue={initial ? toDateInput(initial.startDate) : undefined}
+              defaultValue={initial ? toDateInput(initial.startDate) : todayStr}
               min={initial ? undefined : todayStr}
               disabled={startLocked}
               className={inputClass}
