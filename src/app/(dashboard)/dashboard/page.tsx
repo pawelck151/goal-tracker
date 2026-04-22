@@ -3,6 +3,7 @@ import { getCurrentUser } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { TaskGenerationTrigger } from './TaskGenerationTrigger'
+import { GoalMenu } from '@/components/GoalMenu'
 
 function startOfDay(d: Date) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate())
@@ -148,9 +149,12 @@ export default async function DashboardPage() {
                     {goal.title}
                   </h2>
                 </div>
-                <span className="text-sm text-stone-400 dark:text-stone-500 sm:mt-0.5 whitespace-nowrap">
-                  do {new Date(goal.deadline).toLocaleDateString('pl-PL')}
-                </span>
+                <div className="flex items-center gap-1 sm:mt-0.5">
+                  <span className="text-sm text-stone-400 dark:text-stone-500 whitespace-nowrap">
+                    do {new Date(goal.deadline).toLocaleDateString('pl-PL')}
+                  </span>
+                  <GoalMenu goalId={goal.id} goalTitle={goal.title} />
+                </div>
               </div>
 
               <div className="w-full bg-stone-200 dark:bg-stone-800 rounded-full h-1.5 mb-1">
