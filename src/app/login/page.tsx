@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [state, formAction, pending] = useActionState(loginAction, null)
 
   return (
-    <div className="min-h-screen bg-stone-100 dark:bg-stone-950 flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-8 w-full max-w-sm shadow-sm">
         <div className="flex justify-center mb-2">
           <Logo size="lg" />

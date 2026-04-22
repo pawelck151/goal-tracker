@@ -46,7 +46,7 @@ export default async function TokenPage({
   const done = tasks.filter((t) => t.dailyLogs[0]?.status === 'DONE').length
 
   return (
-    <div className="min-h-screen bg-stone-100 dark:bg-stone-950">
+    <div className="min-h-screen">
       <div className="max-w-xl mx-auto px-4 py-8">
         <div className="mb-6">
           <h1 className="text-2xl font-semibold tracking-tight text-stone-900 dark:text-stone-100">
